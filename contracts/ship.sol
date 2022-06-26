@@ -74,7 +74,7 @@ contract Ships is ERC721, Ownable {
 
   function random() private view returns (uint) {
       // 0 - 9 value
-    uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp)));
+    uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
     return randomHash % 10;
 } 
 
@@ -82,7 +82,14 @@ contract Ships is ERC721, Ownable {
       uint life = THealth[player];
       return life;
   }
-
+  function checkAccy (address player) public view returns (uint) {
+      uint accuracy = TAccuracy[player];
+      return accuracy;
+  }
+    function checkDama (address player) public view returns (uint) {
+      uint damage = TDamage[player];
+      return damage;
+  }
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
   }
