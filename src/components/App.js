@@ -13,7 +13,7 @@ class App extends Component {
     await this.loadBlockchainData()
     setInterval(() => {
       this.loadBlockchainData();
-    }, 6500);
+    }, 4700);
   }
 
   async loadBlockchainData() {
