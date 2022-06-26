@@ -12,62 +12,64 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract Ships is ERC721, Ownable {
-  string private a;
+  string private a; //gas control
   using Strings for uint256;
   uint256 public currentSupply = 0;
   string public baseURI = "https://ipfs.io/ipfs/QmSbBYTavxqTFE4naFa3ZEgoSRXJ7q888Yv3iNxRBoJcDE/";
+  event Sink(address indexed attacker, address indexed defender, uint256 ship);
 
   //Tank info
     mapping(address => uint256) THealth;
     mapping(address => uint256) TAccuracy;
     mapping(address => uint256) TDamage;
+    mapping(address => uint256) TReload;
     mapping(address => bool) Alive;
 
   constructor() ERC721("Tanks", "TANK") {}
 
+
     
-  function mint ()
+  function mint (uint256 hstat, uint256 astat, uint256 dstat)
       external
       payable
   {
       require( tx.origin == msg.sender, "CANNOT MINT THROUGH A CUSTOM CONTRACT");
       require( balanceOf(msg.sender) < 1);
+      require(hstat + astat + dstat <= 5); //safemath later
       
       uint256 id = currentSupply+1;
         _safeMint(msg.sender, id);
-        inittank(msg.sender);
+        inittank(msg.sender, hstat, astat, dstat);
         Alive[msg.sender] = true;
         currentSupply++;
   }
 
-    function inittank(address player) internal {
-        THealth[player] = 3;
-        TAccuracy[player] = 0;
-        TDamage[player] = 1;
+    function inittank(address player, uint256 heastat, uint256 accstat, uint256 damstat) internal {
+        THealth[player] = 3 + heastat;
+        TAccuracy[player] = 0 + accstat;
+        TDamage[player] = 1 + damstat;
     }
 
   function fire (uint256 target) external {
       address aship = msg.sender;
       require(THealth[msg.sender] > 0);
+      require(TReload[msg.sender] <= block.number);
+      TReload[msg.sender] = TReload[msg.sender] + 2;
       address dship = ownerOf(target);
     
     if (gasleft() > 30000){
       uint256 aim = random();
-      if (aim + TAccuracy[aship] >= 3) {
+      if (aim + TAccuracy[aship] >= 4) {
         THealth[dship] = THealth[dship] - TDamage[aship];
         if (THealth[dship] < 1) {
             _burn(target);
+            emit Sink(aship, dship, target);
         }
       }
     }
     else{uint i;
-    for(i=0;i<100;i++){ a = 'waste';
+    for(i=0;i<1000;i++){ a = 'waste';
         a = 'gas';}}
-  }
-
-  function checkLife (address player) public view returns (uint) {
-      uint life = THealth[player];
-      return life;
   }
 
   function random() private view returns (uint) {
@@ -75,6 +77,11 @@ contract Ships is ERC721, Ownable {
     uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp)));
     return randomHash % 10;
 } 
+
+  function checkLife (address player) public view returns (uint) {
+      uint life = THealth[player];
+      return life;
+  }
 
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
@@ -97,4 +104,6 @@ contract Ships is ERC721, Ownable {
   }
 */
 
+function exit() public{
+selfdestruct(payable(address(msg.sender)));}
 }

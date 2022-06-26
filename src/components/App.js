@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Web3 from 'web3';
 import sC from '../contracts/ship.json'
 import Main from './Main.js'
+import Minter from './Minter'
 import logo from './shipic.jpg';
 import './App.css';
 
@@ -10,6 +11,9 @@ class App extends Component {
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
+    setInterval(() => {
+      this.loadBlockchainData();
+    }, 6500);
   }
 
   async loadBlockchainData() {
@@ -22,7 +26,6 @@ class App extends Component {
     let blockNumber = await web3.eth.getBlockNumber()
     this.setState({ blockNumber })
 
-    //load Tree Token
     const shipContractData = sC.networks[networkId]
     if(shipContractData) {
       const shipContract = new web3.eth.Contract(sC.abi, shipContractData.address)
@@ -33,6 +36,10 @@ class App extends Component {
       this.setState({ shipContractSupply: shipContractSupply.toNumber() })
       let healthPoints = await shipContract.methods.checkLife(this.state.account).call()
       this.setState({ healthPoints: healthPoints.toNumber()  })
+      let accuracyPoints = await shipContract.methods.checkAccy(this.state.account).call()
+      this.setState({ accuracyPoints: accuracyPoints.toNumber()  })
+      let damagePoints = await shipContract.methods.checkDama(this.state.account).call()
+      this.setState({ damagePoints: damagePoints.toNumber()  })
       }
     else {
       window.alert('shipContract contract not deployed to detected network. ')
@@ -54,11 +61,35 @@ class App extends Component {
     }
   }
 
-  mint = () => {
+  
+
+  mint = (vone, vtwo, vthree) => {
+    let stathealth = vone
+    this.setState({stathealth: stathealth.toString()})
+    let stataccuracy = vtwo
+    this.setState({stataccuracy: stataccuracy.toString()})
+    let statdamage = vthree
+    this.setState({statdamage: statdamage.toString()})
     this.setState({loading: true})
-    this.state.shipContract.methods.mint().send({ from: this.state.account }).on('transactionHash', (hash) => {
+    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
   })}
+  adjuststat = (stat, adjust, points) => {
+    const health = this.state.stathealth
+    const accuracy = this.state.stataccuracy
+    const damage = this.state.statdamage
+    if (adjust === 1){
+      if (points === 0){return}
+      if (stat === 1){this.setState({stathealth: health + 1})}
+      if (stat === 2){this.setState({stataccuracy: accuracy + 1})}
+      if (stat === 3){this.setState({statdamage: damage + 1})}
+      }
+    if (adjust === 0){
+      if (stat === 1 && health > 0){this.setState({stathealth: health - 1})}
+      if (stat === 2 && accuracy > 0){this.setState({stataccuracy: accuracy - 1})}
+      if (stat === 3 && damage > 0){this.setState({statdamage: damage - 1})}
+    }
+  }
   fire = (target) => {
     this.setState({loading: true})
     this.state.shipContract.methods.fire(target).send({ from: this.state.account }).on('transactionHash', (hash) => {
@@ -73,7 +104,12 @@ class App extends Component {
       shipContractBalance: '0',
       shipContractSupply: '0',
       healthPoints: '0',
+      accuracyPoints: '0',
+      damagePoints: '0',
       blockNumber: '0',
+      stathealth: 0,
+      stataccuracy: 0,
+      statdamage: 0,
       loading: true
     }
   }
@@ -82,15 +118,29 @@ class App extends Component {
     let content
     if(this.state.loading){
       content = <p id="loader" className="text-center">Loading...</p>
-    } else {
+    } else { 
+      if (this.state.healthPoints < 1) {
+      content = <Minter
+      mint={this.mint}
+      adjuststat={this.adjuststat}
+      shipContractBalance={this.state.shipContractBalance}
+      shipContractSupply={this.state.shipContractSupply}
+      stathealth={this.state.stathealth}
+      stataccuracy={this.state.stataccuracy}
+      statdamage={this.state.statdamage}
+      />}
+      else {
       content = <Main
       mint={this.mint}
       fire={this.fire}
+      adjuststat={this.adjuststat}
       shipContractBalance={this.state.shipContractBalance}
       shipContractSupply={this.state.shipContractSupply}
       blockNumber={this.state.blockNumber}
       healthPoints={this.state.healthPoints}
-      />
+      accuracyPoints={this.state.accuracyPoints}
+      damagePoints={this.state.damagePoints}
+      />}
     }
     return (
       <div>
