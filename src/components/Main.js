@@ -33,7 +33,7 @@ class Main extends Component {
             <button type="submit" className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>
           </form>
           <br></br>
-          <a href="https://polygonscan.com/token/0x193f7eec869b2fe9afe12be3508f9856ca3dcee3#inventory">Find a target</a>
+          <a href="https://polygonscan.com/token/0x84c164c618ddc23aeb4be3a3f886d629d607447b#inventory">Find a target</a>
         </div> 
       </div>
     );
