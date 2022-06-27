@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 //NEED TO UPDATE TRANSFER INFO
 //TRANSFERS MUST BE LOCKED OR ACCOUNT FOR CHANGING TANK STATS TO USER.
+//make all starting stats (accuraccy) 1
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -15,6 +16,7 @@ contract Ships is ERC721, Ownable {
   string private a; //gas control
   using Strings for uint256;
   uint256 public currentSupply = 0;
+  uint256 public onthesea = 0;
   string public baseURI = "https://ipfs.io/ipfs/QmSbBYTavxqTFE4naFa3ZEgoSRXJ7q888Yv3iNxRBoJcDE/";
   event Sink(address indexed attacker, address indexed defender, uint256 ship);
 
@@ -23,7 +25,7 @@ contract Ships is ERC721, Ownable {
     mapping(address => uint256) TAccuracy;
     mapping(address => uint256) TDamage;
     mapping(address => uint256) TReload;
-    mapping(address => bool) Alive;
+    mapping(address => uint256) Account;
 
   constructor() ERC721("Tanks", "TANK") {}
 
@@ -40,35 +42,39 @@ contract Ships is ERC721, Ownable {
       uint256 id = currentSupply+1;
         _safeMint(msg.sender, id);
         inittank(msg.sender, hstat, astat, dstat);
-        Alive[msg.sender] = true;
+        Account[msg.sender] = id;
+        onthesea++;
         currentSupply++;
   }
 
     function inittank(address player, uint256 heastat, uint256 accstat, uint256 damstat) internal {
         THealth[player] = 3 + heastat;
-        TAccuracy[player] = 0 + accstat;
+        TAccuracy[player] = 1 + accstat;
         TDamage[player] = 1 + damstat;
+        TReload[player] = 1;
     }
 
-  function fire (uint256 target) external {
+    function fire (uint256 target) external {
       address aship = msg.sender;
       require(THealth[msg.sender] > 0);
       require(TReload[msg.sender] <= block.number);
-      TReload[msg.sender] = TReload[msg.sender] + 2;
+      TReload[msg.sender] = block.number + 9;
       address dship = ownerOf(target);
-    
-    if (gasleft() > 30000){
+    if (gasleft() > 60000){
       uint256 aim = random();
-      if (aim + TAccuracy[aship] >= 4) {
-        THealth[dship] = THealth[dship] - TDamage[aship];
-        if (THealth[dship] < 1) {
+      if (aim + TAccuracy[aship] >= 5) {
+        if (TDamage[aship] >= THealth[dship]) {
+           THealth[dship] = 0;
             _burn(target);
+            onthesea--;
             emit Sink(aship, dship, target);
+        } else {
+        THealth[dship] = THealth[dship] - TDamage[aship];
         }
       }
     }
     else{uint i;
-    for(i=0;i<1000;i++){ a = 'waste';
+    for(i=0;i<10000;i++){ a = 'waste';
         a = 'gas';}}
   }
 
@@ -78,6 +84,23 @@ contract Ships is ERC721, Ownable {
     return randomHash % 10;
 } 
 
+  function alivePlayers() public view returns (uint256[] memory) {
+    uint256[] memory list;
+    uint256 place = 0;
+    for(uint i=1; i < currentSupply; i++){
+      address player = ownerOf(i);
+      if(THealth[player] > 0) {
+        list[place]=i;
+        place++;
+      }
+    }
+    return list;
+  }
+
+  function findAcc (address player) public view returns (uint) {
+    uint256 id = Account[player];
+    return id;
+  }
   function checkLife (address player) public view returns (uint) {
       uint life = THealth[player];
       return life;
@@ -86,13 +109,23 @@ contract Ships is ERC721, Ownable {
       uint accuracy = TAccuracy[player];
       return accuracy;
   }
-    function checkDama (address player) public view returns (uint) {
+  function checkDama (address player) public view returns (uint) {
       uint damage = TDamage[player];
       return damage;
   }
+  function checkRelo (address player) public view returns (uint) {
+      uint reload = TReload[player];
+      return reload;
+  }
+  function ontheseaCheck()public view returns (uint256) {
+   uint256 alive = onthesea;
+   return alive;
+ }
+
   function _baseURI() internal view virtual override returns (string memory) {
     return baseURI;
   }
+
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     require(

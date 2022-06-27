@@ -13,7 +13,7 @@ class App extends Component {
     await this.loadBlockchainData()
     setInterval(() => {
       this.loadBlockchainData();
-    }, 4700);
+    }, 5000);
   }
 
   async loadBlockchainData() {
@@ -24,7 +24,7 @@ class App extends Component {
 
     const networkId = await web3.eth.net.getId() 
     let blockNumber = await web3.eth.getBlockNumber()
-    this.setState({ blockNumber })
+    this.setState({ blockNumber: blockNumber })
 
     const shipContractData = sC.networks[networkId]
     if(shipContractData) {
@@ -40,6 +40,14 @@ class App extends Component {
       this.setState({ accuracyPoints: accuracyPoints.toNumber()  })
       let damagePoints = await shipContract.methods.checkDama(this.state.account).call()
       this.setState({ damagePoints: damagePoints.toNumber()  })
+      if(healthPoints > 0){
+        let shipNumber = await shipContract.methods.findAcc(this.state.account).call()
+        this.setState({ shipNumber: shipNumber.toNumber()  })
+        let reloadblock = await shipContract.methods.checkRelo(this.state.account).call()
+        this.setState({ reloadblock: reloadblock.toNumber()  })
+        let shipOTS = await shipContract.methods.ontheseaCheck().call()
+        this.setState({ shipOTS: shipOTS.toNumber()  })
+        }
       }
     else {
       window.alert('shipContract contract not deployed to detected network. ')
@@ -94,18 +102,54 @@ class App extends Component {
     this.setState({loading: true})
     this.state.shipContract.methods.fire(target).send({ from: this.state.account }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
+    this.setState({ internalReload: this.state.blockNumber+8 })
+    this.setState({ eneshipNumber: target })
+    setInterval(() => {
+      this.loadTarget(target);
+    }, 5000);
   })}
+
+  async loadTarget(target) {
+    const web3 = window.web3
+    const networkId = await web3.eth.net.getId() 
+    const shipContractData = sC.networks[networkId]
+    if(shipContractData) {
+      const shipContract = new web3.eth.Contract(sC.abi, shipContractData.address)
+      this.setState({ shipContract })
+      if (target !== this.state.lastTarget) {
+        let targetEnemy = await shipContract.methods.ownerOf(target).call()
+        this.setState({ targetEnemy: targetEnemy })
+        console.log('h')
+        this.setState({lastTarget: target})}
+      let targetEnemy = this.state.targetEnemy
+      let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
+      this.setState({ enehealthPoints: enehealthPoints.toNumber()  })
+      let eneaccuracyPoints = await shipContract.methods.checkAccy(targetEnemy).call()
+      this.setState({ eneaccuracyPoints: eneaccuracyPoints.toNumber()  })
+      let enedamagePoints = await shipContract.methods.checkDama(targetEnemy).call()
+      this.setState({ enedamagePoints: enedamagePoints.toNumber()  })}
+  }
 
   constructor(props) {
     super(props)
     this.state = {
       account: '0x0',
+      targetEnemy: '0x0',
+      lastTarget: '0',
       shipContract: {},
       shipContractBalance: '0',
       shipContractSupply: '0',
+      shipNumber: '0',
       healthPoints: '0',
       accuracyPoints: '0',
       damagePoints: '0',
+      enehealthPoints: '0',
+      eneaccuracyPoints: '0',
+      enedamagePoints: '0',
+      eneshipNumber: '0',
+      shipOTS: '0',
+      reloadblock: '0',
+      internalReload: '0',
       blockNumber: '0',
       stathealth: 0,
       stataccuracy: 0,
@@ -137,9 +181,16 @@ class App extends Component {
       shipContractBalance={this.state.shipContractBalance}
       shipContractSupply={this.state.shipContractSupply}
       blockNumber={this.state.blockNumber}
+      shipNumber={this.state.shipNumber}
       healthPoints={this.state.healthPoints}
       accuracyPoints={this.state.accuracyPoints}
       damagePoints={this.state.damagePoints}
+      reloadblock={this.state.reloadblock}
+      internalReload={this.state.internalReload}
+      enehealthPoints={this.state.enehealthPoints}
+      eneaccuracyPoints={this.state.eneaccuracyPoints}
+      enedamagePoints={this.state.enedamagePoints}
+      eneshipNumber={this.state.eneshipNumber}
       />}
     }
     return (
@@ -159,7 +210,8 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
-                <h1>Ship War</h1>
+                <h1>Ship War </h1>
+                {this.state.shipOTS === 1 && this.state.healthPoints > 0 && <h2 style={{color: '#E3E323'}}>You are the KING of the Seas</h2>}
                 {content}
               </div>
             </main>
