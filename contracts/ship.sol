@@ -58,7 +58,7 @@ contract Ships is ERC721, Ownable {
       address aship = msg.sender;
       require(THealth[msg.sender] > 0);
       require(TReload[msg.sender] <= block.number);
-      TReload[msg.sender] = block.number + 9;
+      TReload[msg.sender] = block.number + 15;
       address dship = ownerOf(target);
     if (gasleft() > 60000){
       uint256 aim = random();

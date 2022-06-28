@@ -43,10 +43,10 @@ class Main extends Component {
             <button type="submit" className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>
           </form>} 
           {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black'}}>
-          <p>Your ship is reloading it's cannons!</p>
+          <p>Your ship is reloading its cannons!</p>
           <p>Prepare for your next shot</p></div>}
           <br></br>
-          <a href="https://polygonscan.com/token/0x0dd399dbb744d23c0c92f46e2c2a55e30820c878#inventory">Find a target</a>
+          <a href="https://polygonscan.com/token/0xe9822ecd4a017a790c642f70628ec80dd37a5679#inventory">Find a target</a>
         </div> 
       </div>
     );

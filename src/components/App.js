@@ -98,18 +98,24 @@ class App extends Component {
       if (stat === 3 && damage > 0){this.setState({statdamage: damage - 1})}
     }
   }
+
   fire = (target) => {
     this.setState({loading: true})
     this.state.shipContract.methods.fire(target).send({ from: this.state.account }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
-    this.setState({ internalReload: this.state.blockNumber+8 })
+    this.setState({ internalReload: this.state.blockNumber+14 })
     this.setState({ eneshipNumber: target })
+    var test = this.state.test
+    test = test+1
+    this.setState({ test: test })
     setInterval(() => {
-      this.loadTarget(target);
-    }, 5000);
+      this.loadTarget(target, test);
+    }, 5000); 
   })}
-
-  async loadTarget(target) {
+  async loadTarget(target, int) {
+    const last = int
+    var test = this.state.test
+    if (test !== last) {return}
     const web3 = window.web3
     const networkId = await web3.eth.net.getId() 
     const shipContractData = sC.networks[networkId]
@@ -133,6 +139,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      test: 0,
       account: '0x0',
       targetEnemy: '0x0',
       lastTarget: '0',
