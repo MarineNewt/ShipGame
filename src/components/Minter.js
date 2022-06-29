@@ -4,7 +4,7 @@ class Minter extends Component {
   render() {
     let statpoints = (5 - this.props.stathealth - this.props.stataccuracy - this.props.statdamage)
     return (
-      <div id="content" className="mt-3">
+      <div id="content" className="mt-3" >
       <div><h1>You currently do not have a ship</h1><br></br><br></br></div>
       <div style = {{border: '15px solid blue', borderRadius: '15px', padding: '5px', margin: '10px'}}>
                     <p>Pick Stats for your ship: {statpoints}</p>

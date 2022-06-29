@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import Web3 from 'web3';
 import sC from '../contracts/ship.json'
+import bkgrd from './background.jpg'
 import Main from './Main.js'
 import Minter from './Minter'
-import logo from './shipic.jpg';
+import logo from './invisship.png';
 import './App.css';
 
 class App extends Component {
@@ -103,19 +104,19 @@ class App extends Component {
     this.setState({loading: true})
     this.state.shipContract.methods.fire(target).send({ from: this.state.account }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
-    this.setState({ internalReload: this.state.blockNumber+14 })
-    this.setState({ eneshipNumber: target })
+    this.setState({ internalReload: this.state.blockNumber+17 })
     var test = this.state.test
     test = test+1
     this.setState({ test: test })
-    setInterval(() => {
-      this.loadTarget(target, test);
+    var thisinterval = setInterval(() => {
+      this.loadTarget(target, test, thisinterval);
     }, 5000); 
   })}
-  async loadTarget(target, int) {
+  async loadTarget(target, int, thisinterval) {
+    this.setState({ eneshipNumber: target })
     const last = int
     var test = this.state.test
-    if (test !== last) {return}
+    if (test !== last) {clearInterval(thisinterval)}
     const web3 = window.web3
     const networkId = await web3.eth.net.getId() 
     const shipContractData = sC.networks[networkId]
@@ -201,7 +202,8 @@ class App extends Component {
       />}
     }
     return (
-      <div>
+      <div style={{backgroundImage: `url( ${bkgrd} )`,
+      backgroundSize: 'cover'}}>
         <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
           <div
             className="navbar-brand col-sm-3 col-md-2 mr-0"
