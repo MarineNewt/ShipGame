@@ -14,7 +14,7 @@ class App extends Component {
     await this.loadBlockchainData()
     setInterval(() => {
       this.loadBlockchainData();
-    }, 5000);
+    }, 6000);
   }
 
   async loadBlockchainData() {
@@ -48,6 +48,13 @@ class App extends Component {
         this.setState({ reloadblock: reloadblock.toNumber()  })
         let shipOTS = await shipContract.methods.ontheseaCheck().call()
         this.setState({ shipOTS: shipOTS.toNumber()  })
+        let OTSarray = []
+        for (var i=1; i<21; i++){
+          let ownerfind = await shipContract.methods.checkIfTokenExist(i).call()
+          ownerfind = ownerfind.toString()
+          if (ownerfind === '1'){OTSarray.push(" " + i)}
+          }
+        this.setState({ OTSarray })
         }
       }
     else {
@@ -126,7 +133,6 @@ class App extends Component {
       if (target !== this.state.lastTarget) {
         let targetEnemy = await shipContract.methods.ownerOf(target).call()
         this.setState({ targetEnemy: targetEnemy })
-        console.log('h')
         this.setState({lastTarget: target})}
       let targetEnemy = this.state.targetEnemy
       let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
@@ -141,6 +147,7 @@ class App extends Component {
     super(props)
     this.state = {
       test: 0,
+      OTSarray: [],
       account: '0x0',
       targetEnemy: '0x0',
       lastTarget: '0',
@@ -199,6 +206,8 @@ class App extends Component {
       eneaccuracyPoints={this.state.eneaccuracyPoints}
       enedamagePoints={this.state.enedamagePoints}
       eneshipNumber={this.state.eneshipNumber}
+      shipOTS={this.state.shipOTS}
+      OTSarray={this.state.OTSarray}
       />}
     }
     return (

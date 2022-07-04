@@ -126,19 +126,6 @@
 			"type": "event"
 		},
 		{
-			"inputs": [],
-			"name": "alivePlayers",
-			"outputs": [
-				{
-					"internalType": "uint256[]",
-					"name": "",
-					"type": "uint256[]"
-				}
-			],
-			"stateMutability": "view",
-			"type": "function"
-		},
-		{
 			"inputs": [
 				{
 					"internalType": "address",
@@ -216,6 +203,25 @@
 				}
 			],
 			"name": "checkDama",
+			"outputs": [
+				{
+					"internalType": "uint256",
+					"name": "",
+					"type": "uint256"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
+			"inputs": [
+				{
+					"internalType": "uint256",
+					"name": "_tokenId",
+					"type": "uint256"
+				}
+			],
+			"name": "checkIfTokenExist",
 			"outputs": [
 				{
 					"internalType": "uint256",
@@ -512,6 +518,19 @@
 			"type": "function"
 		},
 		{
+			"inputs": [],
+			"name": "secondURI",
+			"outputs": [
+				{
+					"internalType": "string",
+					"name": "",
+					"type": "string"
+				}
+			],
+			"stateMutability": "view",
+			"type": "function"
+		},
+		{
 			"inputs": [
 				{
 					"internalType": "address",
@@ -621,8 +640,8 @@
 	"137": {
 	  "events": {},
 	  "links": {},
-	  "address": "0xc2bb98b0b3f9220d49e008b9e764d81f5a3ae422",
-	  "transactionHash": "0x479d5ce35ebe1c043ccc7137f5b1da03b830408f0dcc75f83c73934dac9b7e19"
+	  "address": "0x3ea1c78ba2b11b26db6bdea0053d4278c7887828",
+	  "transactionHash": "0x60471fb5dd6fa136f1357e8d1fabb487f0b37ea4f1bf49e4732c649540cf1266"
 	}
   }
 }

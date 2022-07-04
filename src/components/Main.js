@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import ShipStats from './ShipStats'
 import TargetStats from './TargetStats'
+import Ooverview from './Ooverview'
 import shipImage from './invisship.png'
-
 
 class Main extends Component {
   render() {
     let stats
     let targetstats
+    let oceanoverview
     stats = <ShipStats
     shipNumber={this.props.shipNumber}
     healthPoints={this.props.healthPoints}
@@ -20,9 +21,15 @@ class Main extends Component {
     enedamagePoints={this.props.enedamagePoints}
     eneshipNumber={this.props.eneshipNumber}
     />
+    oceanoverview = <Ooverview
+    OTSarray={this.props.OTSarray}
+    enehealthPoints={this.props.enehealthPoints}
+    shipOTS={this.props.shipOTS}
+    />
     return (
       <div id="content" className="mt-3"> 
-        <div style={{left: '20px', position: 'absolute'}}>{stats}</div> 
+        <div style={{left: '20px', top: '20px', position: 'absolute'}}>{stats}</div> 
+        <div style={{left: '20px', top: '300px', position: 'absolute'}}>{oceanoverview}</div> 
         {this.props.eneaccuracyPoints > 0 && <div style={{right: '20px', position: 'absolute'}}>{targetstats}</div>}
         <div className='text-left text-success' style={{ float: 'right', fontSize: 20, fontFamily: 'Times New Roman' }}>
           <img src={shipImage} alt="Tree" height='300' className="mb-4" style={{ float: 'center' }}/>
@@ -47,8 +54,6 @@ class Main extends Component {
           {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black'}}>
           <p>Your ship is reloading its cannons!</p>
           <p>Prepare for your next shot</p></div>}
-          <br></br>
-          <a href="https://polygonscan.com/token/0xc2bb98b0b3f9220d49e008b9e764d81f5a3ae422#inventory">Find a target</a>
         </div> 
       </div>
     );
