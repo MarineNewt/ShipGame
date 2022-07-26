@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 class TargetStats extends Component {
   render() {
     return (
-        <div id="content" className="mt-3" style={{textAlign:'right', border: '10px solid red', borderRadius: '15px', padding: '5px', margin: '10px'}}>   
+        <div id="content" className="mt-3 compbox" style={{textAlign:'right'}}>   
             {this.props.enehealthPoints >= 1 && <div><h2 className='mr-5'>Target Stats</h2>
             <b><p style={{border: '5px solid red', left:'0px'}}>Ship Health: {this.props.enehealthPoints}</p>
             <p style={{left:'0px'}}>Ship Accuracy: {this.props.eneaccuracyPoints}</p>

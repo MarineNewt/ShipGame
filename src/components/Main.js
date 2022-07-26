@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import ShipStats from './ShipStats'
 import TargetStats from './TargetStats'
 import Ooverview from './Ooverview'
+import ActivityFeed from './ActivityFeed'
 import shipImage from './invisship.png'
 
 class Main extends Component {
@@ -9,6 +10,7 @@ class Main extends Component {
     let stats
     let targetstats
     let oceanoverview
+    let activityfeed
     stats = <ShipStats
     shipNumber={this.props.shipNumber}
     healthPoints={this.props.healthPoints}
@@ -26,13 +28,19 @@ class Main extends Component {
     enehealthPoints={this.props.enehealthPoints}
     shipOTS={this.props.shipOTS}
     />
+    activityfeed = <ActivityFeed
+    eventfeedone={this.props.eventfeedone}
+    eventfeedtwo={this.props.eventfeedtwo}
+    eventfeedthree={this.props.eventfeedthree}
+    log={this.props.log}
+    />
     return (
-      <div id="content" className="mt-3"> 
-        <div style={{left: '20px', top: '20px', position: 'absolute'}}>{stats}</div> 
-        <div style={{left: '20px', top: '300px', position: 'absolute'}}>{oceanoverview}</div> 
-        {this.props.eneaccuracyPoints > 0 && <div style={{right: '20px', position: 'absolute'}}>{targetstats}</div>}
-        <div className='text-left text-success' style={{ float: 'right', fontSize: 20, fontFamily: 'Times New Roman' }}>
-          <img src={shipImage} alt="Tree" height='300' className="mb-4" style={{ float: 'center' }}/>
+      <div id="content" className="mt-3" style={{height: '95vh'}}> 
+        <div style={{left: '2vw', top: '2vh', position: 'absolute'}}>{stats}</div> 
+        <div style={{left: '2vw', top: '50vh', position: 'absolute'}}>{oceanoverview}</div> 
+        {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', position: 'absolute'}}>{targetstats}</div>}
+        <div className='text-left' style={{ float: 'right', fontSize: 20, fontFamily: 'Times New Roman' }}>
+          <img src={shipImage} alt="Tree" className="mb-4" style={{ float: 'center', height: '50vh'}}/>
           {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
             let target
@@ -51,9 +59,10 @@ class Main extends Component {
             </div>
             <button type="submit" className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>
           </form>} 
-          {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black'}}>
+          {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black', marginBottom: '7vh'}}>
           <p>Your ship is reloading its cannons!</p>
           <p>Prepare for your next shot</p></div>}
+          {activityfeed}
         </div> 
       </div>
     );

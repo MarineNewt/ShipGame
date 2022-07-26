@@ -4,9 +4,9 @@ class Minter extends Component {
   render() {
     let statpoints = (5 - this.props.stathealth - this.props.stataccuracy - this.props.statdamage)
     return (
-      <div id="content" className="mt-3" >
+      <div id="content" className="mt-3 mb-5" >
       <div><h1>You currently do not have a ship</h1><br></br><br></br></div>
-      <div style = {{border: '15px solid blue', borderRadius: '15px', padding: '5px', margin: '10px'}}>
+      <div className="compbox">
                     <p>Pick Stats for your ship: {statpoints}</p>
                     <div className='btn btn-block btn-med' style = {{}}>
                       <p style = {{fontSize: '50px'}}>{this.props.stathealth}  -  {this.props.stataccuracy}  -  {this.props.statdamage}</p>
@@ -27,7 +27,7 @@ class Minter extends Component {
                 <form className="mb-0" onSubmit={(event) => {
                     event.preventDefault()
                     this.props.mint(this.props.stathealth, this.props.stataccuracy, this.props.statdamage)}}>
-                   <button type="submit" className="btn btn-primary btn-block btn-lg mb-3" style = {{color: "white", backgroundColor: "blue"}} >Mint a Ship</button>
+                   <button type="submit" className="btn btn-primary btn-block btn-lg mb-3" style = {{color: "white", backgroundColor: "black"}} >Mint a Ship</button>
                 </form>              
               </div>
     );
