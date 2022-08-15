@@ -1,15 +1,22 @@
 # ShipGame
 ## Ship NFT game with game actions taken on chain.
 
+This game is playable on the polygon network in its beta v2.0 stage at https://www.shipwars.net/
+
 Uses the contract **ShipGame/contracts/ship.sol** deployed to the polygon network to create a free-for-all war game that can be played entirely on the blockchain.
 
 **ShipGame/src/components/** holds the jsreact components which allow the game to be played in a more understandable manner with an informative UI to enchance the user experince.
 
 An overview of the minting page shown here:
-<img width="956" alt="shipwarmintersite" src="https://user-images.githubusercontent.com/38538941/178054325-53063a1c-72c8-44b8-8ebb-dc8ece04c5bb.png">
+<img width="944" alt="shipminter" src="https://user-images.githubusercontent.com/38538941/184683533-828b0546-c03f-413a-aa36-10f0e4741e01.png">
 
-Along with an image of the active game page once a user's ship has been minted:
-<img width="957" alt="shipwarsite" src="https://user-images.githubusercontent.com/38538941/178054582-6ac8c588-07e0-47ad-9bf4-dbd37a7b50e5.png">
+
+Along with an image of the active game page once a user's ship has been minted (and they have fired, choosing a target to attack):
+<img width="947" alt="shipmain" src="https://user-images.githubusercontent.com/38538941/184683560-b6c273c1-c676-4f19-bb5a-e8fb99cc4078.png">
+
+Additional visual tools can be seen on the page and here, showcasing the ocean activity feed keeping track of recent ocean events:
+<img width="491" alt="shipactivity" src="https://user-images.githubusercontent.com/38538941/184683841-6a3e2dfa-ab8a-438f-8c20-34a4ad11d247.png">
+
 
 
 Truffle v5.1.39 (core: 5.1.39)\
