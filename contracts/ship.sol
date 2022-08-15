@@ -1,35 +1,34 @@
 pragma solidity ^0.8.0;
 //SPDX-License-Identifier: MIT
 
-//NEED TO UPDATE TRANSFER FUNC
-
 /*
-if(_to != 0x0){
-  require( balanceOf(_to) < 1);
-  THealth[_to] = THealth[from];
-  TAccuracy[_to] = TAccuracy[from];
-  TDamage[_to] = TDamage[from];
-  TReload[_to] = TReload[from];
-  THealth[from] = 0;
-  TAccuracy[from] = 0;
-  TDamage[from] = 0;
-  TReload[from] = 0;
-  Account[msg.sender] = id;
-}
+    modifier shiptran(address from, address to, uint256 tokenId) override {
+        if(to != address(0)){
+            require( balanceOf(to) < 1);
+            Account[to] = tokenId;
+            THealth[to] = THealth[from];
+            TAccuracy[to] = TAccuracy[from];
+            TDamage[to] = TDamage[from];
+            TReload[to] = TReload[from];
+            THealth[from] = 0;
+            TAccuracy[from] = 0;
+            TDamage[from] = 0;
+            TReload[from] = 0;
+            }
+            _;}
 */
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 
-contract Ships is ERC721, Ownable {
+contract ShipWars is ERC721, Ownable {
   string private a; //gas control
   using Strings for uint256;
   bool public game = true;
   uint256 public supplyMinted = 0;
   uint256 public onthesea = 0;
-  string public baseURI = "https://ipfs.io/ipfs/QmSbBYTavxqTFE4naFa3ZEgoSRXJ7q888Yv3iNxRBoJcDE/";
-  string public secondURI = "https://ipfs.io/ipfs/QmV8BdHnNQMD9vKFHG5jnQDnZabhvxT1QpaPE1q68gdW35/";
+  string public baseURI = "https://ipfs.io/ipfs/QmS4bUnDG6wp4pbPZaBu7Yjzkn9hBqTioTwXkzHtpiPtmk/";
   event Action(string atype, uint256 indexed aship, uint256 ship);
 
   //Ship info
@@ -40,7 +39,7 @@ contract Ships is ERC721, Ownable {
     mapping(address => uint256) Account;
     mapping(address => uint256) TProtection;
 
-  constructor() ERC721("Tanks", "TANK") {}
+  constructor() ERC721("ShipWars", "SHIP") {}
 
 
     
@@ -56,16 +55,16 @@ contract Ships is ERC721, Ownable {
       
       uint256 id = supplyMinted+1;
         _safeMint(msg.sender, id);
-        inittank(msg.sender, hstat, astat, dstat);
+        initship(msg.sender, hstat, astat, dstat);
         Account[msg.sender] = id;
         onthesea++;
         supplyMinted++;
   }
 
-    function inittank(address player, uint256 heastat, uint256 accstat, uint256 damstat) internal {
-        THealth[player] = 4 + heastat * 2;
+    function initship(address player, uint256 heastat, uint256 accstat, uint256 damstat) internal {
+        THealth[player] = 50 + heastat * 25;
         TAccuracy[player] = 1 + accstat * 2;
-        TDamage[player] = 1 + damstat;
+        TDamage[player] = 10 + damstat * 5;
         TReload[player] = 1;
         TProtection[player] = block.number;
     }
@@ -92,7 +91,7 @@ contract Ships is ERC721, Ownable {
            THealth[dship] = 0;
             _burn(target);
             onthesea--;
-            require(payable(msg.sender).send(7 * 10 **17));
+            require(payable(msg.sender).send(9 * 10 **17));
             emit Action("Sunk", atk, target);
         } else {
         THealth[dship] = THealth[dship] - TDamage[aship];
@@ -113,7 +112,7 @@ contract Ships is ERC721, Ownable {
       // 0 - 19 value
     uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
     return randomHash % 20;
-} 
+  } 
 
   function checkIfTokenExist(uint _tokenId) external view returns(uint256) {
         if (_exists(_tokenId)) {return 1;}
@@ -163,16 +162,30 @@ contract Ships is ERC721, Ownable {
       _exists(tokenId),
       "ERC721Metadata: URI query for nonexistant token"
     );
-    if(tokenId > 1){
+    address target = ownerOf(tokenId);
+
+    if(TDamage[target] >= (10 + 15)){
       string memory currentBaseURI = _baseURI();
       return bytes(currentBaseURI).length > 0
-          ? string(abi.encodePacked(currentBaseURI, tokenId.toString(), ".json"))
+          ? string(abi.encodePacked(currentBaseURI, "4", ".json"))
+          : "";
+    }
+    if(TAccuracy[target] >= (1 + 6)){
+      string memory currentBaseURI = _baseURI();
+      return bytes(currentBaseURI).length > 0
+          ? string(abi.encodePacked(currentBaseURI, "2", ".json"))
+          : "";
+    }
+    if(THealth[target] >= (50 + 75)){
+      string memory currentBaseURI = _baseURI();
+      return bytes(currentBaseURI).length > 0
+          ? string(abi.encodePacked(currentBaseURI, "3", ".json"))
           : "";
     }
     else{
       string memory currentBaseURI = _baseURI();
       return bytes(currentBaseURI).length > 0
-          ? string(abi.encodePacked(secondURI, "1", ".json"))
+          ? string(abi.encodePacked(currentBaseURI, "1", ".json"))
           : "";
     }
   }
@@ -188,4 +201,6 @@ contract Ships is ERC721, Ownable {
 
   function exit() external onlyOwner{
     selfdestruct(payable(address(msg.sender)));}
-  }
+
+
+}

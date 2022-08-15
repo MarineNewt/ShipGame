@@ -8,13 +8,12 @@ import logo from './invisship.png';
 import './App.css';
 
 class App extends Component {
-
   async componentWillMount() {
     await this.loadWeb3()
     await this.loadBlockchainData()
     setInterval(() => {
       this.loadBlockchainData();
-    }, 6500);
+    }, 6000);
   }
 
   async loadBlockchainData() {
@@ -41,41 +40,42 @@ class App extends Component {
       this.setState({ accuracyPoints: accuracyPoints.toNumber()  })
       let damagePoints = await shipContract.methods.checkDama(this.state.account).call()
       this.setState({ damagePoints: damagePoints.toNumber()  })
+
+      let eventfeedone = []
+      let eventfeedtwo = []
+      let eventfeedthree = []
+
+      let options = {
+        filter: {
+            value: [],
+        },
+        fromBlock: blockNumber-50};
+        shipContract.events.Action(options)
+        .on('data', event => {  let eventfeed = event.returnValues[1].toString()
+                                eventfeedone.push(eventfeed)
+                                this.setState({ eventfeedone: eventfeedone })
+                                let eventfeedd = event.returnValues[0].toString()
+                                eventfeedtwo.push(eventfeedd)
+                                this.setState({ eventfeedtwo: eventfeedtwo })
+                                let eventfeeddd = event.returnValues[2].toString()
+                                eventfeedthree.push(eventfeeddd)
+                                this.setState({ eventfeedthree: eventfeedthree })
+                                if(this.state.eventfeedone){let log = this.state.eventfeedone.length; this.setState({ log: log })}
+                              })
+
       if(healthPoints > 0){
         let shipNumber = await shipContract.methods.findAcc(this.state.account).call()
         this.setState({ shipNumber: shipNumber.toNumber()  })
         let reloadblock = await shipContract.methods.checkRelo(this.state.account).call()
         this.setState({ reloadblock: reloadblock.toNumber()  })
-        let shipOTS = await shipContract.methods.ontheseaCheck().call()
-        this.setState({ shipOTS: shipOTS.toNumber()  })
         let OTSarray = await shipContract.methods.idOTS().call()
-        this.setState({ OTSarray })
-        let eventfeedone = []
-        let eventfeedtwo = []
-        let eventfeedthree = []
-        console.log(this.state.log)
-        let options = {
-          filter: {
-              value: [],
-          },
-          fromBlock: blockNumber-50};
-          shipContract.events.Action(options)
-          .on('data', event => {  let eventfeed = event.returnValues[1].toString()
-                                  eventfeedone.push(eventfeed)
-                                  this.setState({ eventfeedone: eventfeedone })
-                                  let eventfeedd = event.returnValues[0].toString()
-                                  eventfeedtwo.push(eventfeedd)
-                                  this.setState({ eventfeedtwo: eventfeedtwo })
-                                  let eventfeeddd = event.returnValues[2].toString()
-                                  eventfeedthree.push(eventfeeddd)
-                                  this.setState({ eventfeedthree: eventfeedthree })
-                                  if(this.state.eventfeedone){let log = this.state.eventfeedone.length; this.setState({ log: log })}
-                                })
-                                
+        this.setState({ OTSarray })      
+        let shipOTS = OTSarray.length;
+        this.setState({ shipOTS: shipOTS  })       
         }
       }
     else {
-      window.alert('shipContract contract not deployed to detected network. ')
+      window.alert('Please switch to the Polygon Network ')
       }
 
     this.setState({ loading: false })
@@ -210,6 +210,11 @@ class App extends Component {
       stathealth={this.state.stathealth}
       stataccuracy={this.state.stataccuracy}
       statdamage={this.state.statdamage}
+      OTSarray={this.state.OTSarray}
+      log={this.state.log}
+      eventfeedone={this.state.eventfeedone}
+      eventfeedtwo={this.state.eventfeedtwo}
+      eventfeedthree={this.state.eventfeedthree}
       />}
       else {
       content = <Main
@@ -240,15 +245,18 @@ class App extends Component {
     return (
       <div style={{backgroundImage: `url( ${bkgrd} )`,
       backgroundSize: 'cover'}}>
-        <nav className="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow" style={{height: '7vh'}}>
+        <nav className="navbar navbar-dark fixed-top bg-dark  p-0 shadow" style={{height: '7vh'}}>
+          <div className='flex-container'>
           <div
-            className="navbar-brand col-sm-3 col-md-2 mr-0 mb-2"
+            className="navbar-brand"
             rel="noopener noreferrer"
+            style={{marginLeft:'10px', marginRight: 'calc(25vw - 100px)'}}
           >
             Ship War Game
           </div>
-          <small className="navbar-brand col-sm-1 "> {this.state.account} </small>
-          <img src={logo} height="40" width="40"  alt="" />
+          <small className="navbar-brand" style={{ fontSize: 'calc(8px + 1.25vw)'}}> {this.state.account} </small>
+          <img src={logo} style={{position: 'fixed', right: '10px'}} height="40" width="40"  alt="" />
+          </div>
         </nav>
 
         <div className="container-fluid" style={{marginTop: '7vh'}}>
@@ -256,7 +264,7 @@ class App extends Component {
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
                 <h1>Ship War </h1>
-                {this.state.shipOTS === 1 && this.state.healthPoints > 0 && <h2 style={{color: '#E3E323'}}>You are the KING of the Seas</h2>}
+                {this.state.shipOTS === 1 && this.state.healthPoints > 0 && <h2 className="comp-head-sizer" style={{color: '#E3E323'}}>You are the KING of the Seas</h2>}
                 {content}
               </div>
             </main>

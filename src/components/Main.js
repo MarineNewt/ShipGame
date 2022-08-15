@@ -35,12 +35,12 @@ class Main extends Component {
     log={this.props.log}
     />
     return (
-      <div id="content" className="mt-3" style={{height: '95vh'}}> 
+      <div id="content" className="mt-3" style={{align: 'center', height: '130vh'}}> 
         <div style={{left: '2vw', top: '2vh', position: 'absolute'}}>{stats}</div> 
-        <div style={{left: '2vw', top: '50vh', position: 'absolute'}}>{oceanoverview}</div> 
-        {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', position: 'absolute'}}>{targetstats}</div>}
-        <div className='text-left' style={{ float: 'right', fontSize: 20, fontFamily: 'Times New Roman' }}>
-          <img src={shipImage} alt="Tree" className="mb-4" style={{ float: 'center', height: '50vh'}}/>
+        <div style={{left: '2vw', top: 'calc(110vh - 25vw)', position: 'absolute'}}>{oceanoverview}</div> 
+        {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', top: '2vh', position: 'absolute'}}>{targetstats}</div>}
+        <div className='' style={{fontSize: 20, fontFamily: 'Times New Roman' }}>
+          <img src={shipImage} alt="Tree" className="mb-4" style={{ float: 'center', height: '25vw'}}/>
           {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
             let target

@@ -1,7 +1,20 @@
 
 .compbox{
-    border: 1.5vh solid black;
+    border: .7vw solid black;
     border-radius: 3vh;
     padding: 1vh;
     margin: 2vh;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.comp-font-sizer{
+    font-size: calc(.7vw + 7px);
+}
+
+.comp-head-sizer{
+    font-size: 2.5vw;
 }
