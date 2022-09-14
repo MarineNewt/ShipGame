@@ -33,15 +33,15 @@ class App extends Component {
       const shipContract = new web3.eth.Contract(sC.abi, shipContractData.address)
       this.setState({ shipContract })
       let shipContractBalance = await shipContract.methods.balanceOf(this.state.account).call()
-      this.setState({ shipContractBalance: shipContractBalance.toNumber() })
+      this.setState({ shipContractBalance: shipContractBalance })
       let shipContractSupply = await shipContract.methods.supplyMinted().call()
-      this.setState({ shipContractSupply: shipContractSupply.toNumber() })
+      this.setState({ shipContractSupply: shipContractSupply })
       let healthPoints = await shipContract.methods.checkLife(this.state.account).call()
-      this.setState({ healthPoints: healthPoints.toNumber()  })
+      this.setState({ healthPoints: healthPoints  })
       let accuracyPoints = await shipContract.methods.checkAccy(this.state.account).call()
-      this.setState({ accuracyPoints: accuracyPoints.toNumber()  })
+      this.setState({ accuracyPoints: accuracyPoints  })
       let damagePoints = await shipContract.methods.checkDama(this.state.account).call()
-      this.setState({ damagePoints: damagePoints.toNumber()  })
+      this.setState({ damagePoints: damagePoints  })
 
       let eventfeedone = []
       let eventfeedtwo = []
@@ -67,9 +67,9 @@ class App extends Component {
 
       if(healthPoints > 0){
         let shipNumber = await shipContract.methods.findAcc(this.state.account).call()
-        this.setState({ shipNumber: shipNumber.toNumber()  })
+        this.setState({ shipNumber: shipNumber  })
         let reloadblock = await shipContract.methods.checkRelo(this.state.account).call()
-        this.setState({ reloadblock: reloadblock.toNumber()  })
+        this.setState({ reloadblock: reloadblock  })
         let OTSarray = await shipContract.methods.idOTS().call()
         this.setState({ OTSarray })      
         let shipOTS = OTSarray.length;
@@ -157,11 +157,11 @@ class App extends Component {
         this.setState({lastTarget: target})}
       let targetEnemy = this.state.targetEnemy
       let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
-      this.setState({ enehealthPoints: enehealthPoints.toNumber()  })
+      this.setState({ enehealthPoints: enehealthPoints  })
       let eneaccuracyPoints = await shipContract.methods.checkAccy(targetEnemy).call()
-      this.setState({ eneaccuracyPoints: eneaccuracyPoints.toNumber()  })
+      this.setState({ eneaccuracyPoints: eneaccuracyPoints  })
       let enedamagePoints = await shipContract.methods.checkDama(targetEnemy).call()
-      this.setState({ enedamagePoints: enedamagePoints.toNumber()  })}
+      this.setState({ enedamagePoints: enedamagePoints  })}
   }
 
   constructor(props) {
