@@ -3,7 +3,7 @@ import ShipStats from './ShipStats'
 import TargetStats from './TargetStats'
 import Ooverview from './Ooverview'
 import ActivityFeed from './ActivityFeed'
-import shipImage from './invisship.png'
+import shipImage from './images/invisship.png'
 
 class Main extends Component {
   render() {

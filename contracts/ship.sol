@@ -142,6 +142,7 @@ contract ShipWars is ERC721, Ownable {
    uint256 alive = onthesea;
    return alive;
   }
+
   function idOTS()public view returns (uint256 [] memory) {
    uint256[] memory tokenIds = new uint256[](onthesea);
    uint256 x = 0;
@@ -190,6 +191,15 @@ contract ShipWars is ERC721, Ownable {
     }
   }
   
+  //owner
+  function refund(uint256 tokenId) external onlyOwner {
+    address payable recipient = payable(ownerOf(tokenId));
+    THealth[recipient] = 0;
+    _burn(tokenId);
+    onthesea--;
+    require(payable(recipient).send(9 * 10 **17));
+  }
+
   function withdraw() public payable onlyOwner {
     require(payable(msg.sender).send(address(this).balance));
   }
@@ -200,6 +210,7 @@ contract ShipWars is ERC721, Ownable {
   }
 
   function exit() external onlyOwner{
+    require (!game);
     selfdestruct(payable(address(msg.sender)));}
 
 

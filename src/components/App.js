@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import {BrowserRouter as Router, Routes, Route, } from "react-router-dom"
 import Web3 from 'web3';
 import sC from '../contracts/ship.json'
-import bkgrd from './background.jpg'
+import bkgrd from './images//background.jpg'
 import Main from './Main.js'
 import Minter from './Minter'
-import logo from './invisship.png';
+import InfoPage from './GameInfoPage.js';
+import logo from './images/invisship.png';
 import './App.css';
 
 class App extends Component {
@@ -243,6 +245,9 @@ class App extends Component {
       />}
     }
     return (
+      <Router>
+        <Routes>
+          <Route path="/" element={
       <div style={{backgroundImage: `url( ${bkgrd} )`,
       backgroundSize: 'cover'}}>
         <nav className="navbar navbar-dark fixed-top bg-dark  p-0 shadow" style={{height: '7vh'}}>
@@ -270,9 +275,16 @@ class App extends Component {
             </main>
           </div>
         </div>
-      </div>
+      </div>} />
+          <Route path="/info" element={<Inforoute/>}/>
+        </Routes>
+      </Router>
     );
   }
+}
+
+function Inforoute() {
+  return <InfoPage/>
 }
 
 export default App;

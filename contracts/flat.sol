@@ -1304,7 +1304,16 @@ contract ShipWars is ERC721, Ownable {
           : "";
     }
   }
-  
+
+    //owner
+  function refund(uint256 tokenId) external onlyOwner {
+    address payable recipient = payable(ownerOf(tokenId));
+    THealth[recipient] = 0;
+    _burn(tokenId);
+    onthesea--;
+    require(payable(recipient).send(9 * 10 **17));
+  }
+
   function withdraw() public payable onlyOwner {
     require(payable(msg.sender).send(address(this).balance));
   }

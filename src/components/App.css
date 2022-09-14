@@ -18,3 +18,17 @@
 .comp-head-sizer{
     font-size: 2.5vw;
 }
+
+.inforead{
+    font-size: 1.5vw;
+    margin-left: 10vw;
+    margin-right: 10vw;
+    text-align: left;
+}
+
+.inforeadinner{
+    font-size: 1.5vw;
+    margin-left: 20vw;
+    margin-right: 10vw;
+    text-align: left;
+}

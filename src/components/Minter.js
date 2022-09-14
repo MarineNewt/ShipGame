@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ActivityFeed from './ActivityFeed';
+import GameInfo from './GameInfo';
 import MaticInfo from './MaticInfo';
+
 
 class Minter extends Component {
   render() {
@@ -9,8 +11,8 @@ class Minter extends Component {
     return (
       <div id="content" className="mt-3 mb-5" >
       <div><h1>You currently do not have a ship</h1>
-      {Mobile === 'false' && <div style={{left: '.1vw', top: '.5vw', position: 'absolute'}}><MaticInfo/></div> }
-      
+      {Mobile === 'false' && <div style={{left: '.1vw', top: '.5vw', position: 'absolute'}}><GameInfo/></div> }
+      {Mobile === 'false' && <div style={{left: '.1vw', top: '21vw', position: 'absolute'}}><MaticInfo/></div> }
       <br></br><br></br></div>
       <div className="compbox">
                     <p>Pick Stats for your ship: <b>{statpoints}</b> </p>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import matictoken from './matic.png';
+import matictoken from './images/matic.png';
 
 class MaticInfo extends Component {
   render() {
