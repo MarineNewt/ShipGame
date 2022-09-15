@@ -1326,6 +1326,7 @@ contract ShipWars is ERC721, Ownable {
   function exit() external onlyOwner{
     selfdestruct(payable(address(msg.sender)));}
 
+    //Handles adjusting accounts for NFT transfers
     modifier shiptran(address from, address to, uint256 tokenId) override {
         if(to != address(0)){
             require( balanceOf(to) < 1);

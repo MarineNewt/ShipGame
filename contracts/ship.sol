@@ -2,6 +2,7 @@ pragma solidity ^0.8.0;
 //SPDX-License-Identifier: MIT
 
 /*
+    //Handles adjusting accounts for NFT transfers
     modifier shiptran(address from, address to, uint256 tokenId) override {
         if(to != address(0)){
             require( balanceOf(to) < 1);

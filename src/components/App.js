@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Routes, Route, } from "react-router-dom"
+import {BrowserRouter as Router, Routes, Route, } from "react-router-dom";
 import Web3 from 'web3';
-import sC from '../contracts/ship.json'
-import bkgrd from './images//background.jpg'
-import Main from './Main.js'
-import Minter from './Minter'
+import sC from '../contracts/ship.json';
+import bkgrd from './images//background.jpg';
+import discord from './images/discord.png'
+import Main from './Main.js';
+import Minter from './Minter';
+import NavBar from './NavBar.js';
 import InfoPage from './GameInfoPage.js';
-import logo from './images/invisship.png';
+import TosPage from './TermsOfService.js';
 import './App.css';
 
 class App extends Component {
@@ -248,22 +250,8 @@ class App extends Component {
       <Router>
         <Routes>
           <Route path="/" element={
-      <div style={{backgroundImage: `url( ${bkgrd} )`,
-      backgroundSize: 'cover'}}>
-        <nav className="navbar navbar-dark fixed-top bg-dark  p-0 shadow" style={{height: '7vh'}}>
-          <div className='flex-container'>
-          <div
-            className="navbar-brand"
-            rel="noopener noreferrer"
-            style={{marginLeft:'10px', marginRight: 'calc(25vw - 100px)'}}
-          >
-            Ship War Game
-          </div>
-          <small className="navbar-brand" style={{ fontSize: 'calc(8px + 1.25vw)'}}> {this.state.account} </small>
-          <img src={logo} style={{position: 'fixed', right: '10px'}} height="40" width="40"  alt="" />
-          </div>
-        </nav>
-
+      <div style={{backgroundImage: `url( ${bkgrd} )`, backgroundSize: 'cover'}}>
+        <NavBar account = {this.state.account} />
         <div className="container-fluid" style={{marginTop: '7vh'}}>
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
@@ -273,10 +261,12 @@ class App extends Component {
                 {content}
               </div>
             </main>
+            <div className="flex mb-5 ml-5"><a href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={discord} alt="info"></img></a><a href="/terms" className="ml-5">Terms of Service</a></div>
           </div>
         </div>
       </div>} />
           <Route path="/info" element={<Inforoute/>}/>
+          <Route path='/terms' element={<Tosroute/>}/>
         </Routes>
       </Router>
     );
@@ -285,6 +275,9 @@ class App extends Component {
 
 function Inforoute() {
   return <InfoPage/>
+}
+function Tosroute() {
+  return <TosPage/>
 }
 
 export default App;
