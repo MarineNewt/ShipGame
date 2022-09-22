@@ -30,11 +30,9 @@ class GameInfoPage extends Component {
                     <p className="inforead"><b>1. Navigate to Shipwars.net </b></p>
                     <p className="inforead"><b>2. Connect your wallet.     </b></p>
 
-                    <p className="inforead"><b>3. Choose your stats and mint ship. </b></p>
+                    <p className="inforead"><b>3. Choose your stats and mint a ship. </b></p>
                     <p className="inforeadinner"> i. You will have 5 stat points to allocate into Health, Accuracy, or Damage.</p>
                     <p className="inforeadinner"> ii. Cost to mint a ship is 1 Matic (which funds the prize pool for the game.)</p>
-                    <p className="inforeadinner mb-0"> iii. Before you finalize the transaction, it is advised to save your gas settings slightly higher. Sometimes gas spikes on the polygon network can cause your transaction to get "stuck" impacting game performance.</p>
-                    <p className="inforeadinner mt-0"> <i>*For detailed information on managing gas check out our discord for help.</i></p>
 
                     <p className="inforead"><b>4. Now that your ship is minted the game is on! Other players can now see you and begin shooting.</b></p>
                     <p className="inforeadinner"> i. In the upper left corner you will see your Ship Stats based on how you allocated during minting. This comes in the form of Health, Accuracy, and Damage. In the bottom center of this box you will see your ship’s number. </p>

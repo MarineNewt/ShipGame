@@ -4,6 +4,7 @@ import Web3 from 'web3';
 import sC from '../contracts/ship.json';
 import bkgrd from './images//background.jpg';
 import discord from './images/discord.png'
+import twitter from './images/twitter.png'
 import Main from './Main.js';
 import Minter from './Minter';
 import NavBar from './NavBar.js';
@@ -109,7 +110,7 @@ class App extends Component {
     let statdamage = vthree
     this.setState({statdamage: statdamage.toString()})
     this.setState({loading: true})
-    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1') }).on('transactionHash', (hash) => {
+    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 225000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
   })}
   adjuststat = (stat, adjust, points) => {
@@ -131,7 +132,7 @@ class App extends Component {
 
   fire = (target) => {
     this.setState({loading: true})
-    this.state.shipContract.methods.fire(target).send({ from: this.state.account }).on('transactionHash', (hash) => {
+    this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
     this.setState({ loading: false })
     this.setState({ internalReload: this.state.blockNumber+17 })
     var test = this.state.test
@@ -261,7 +262,7 @@ class App extends Component {
                 {content}
               </div>
             </main>
-            <div className="flex mb-5 ml-5"><a href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={discord} alt="info"></img></a><a href="/terms" className="ml-5">Terms of Service</a></div>
+            <div className="flex mb-5 ml-5"><a className='mr-1' href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
           </div>
         </div>
       </div>} />
