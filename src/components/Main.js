@@ -7,6 +7,7 @@ import shipImage from './images/invisship.png'
 
 class Main extends Component {
   render() {
+    const Mobile = window.innerWidth >= 1100 ? 'false' : 'true';
     let stats
     let targetstats
     let oceanoverview
@@ -36,9 +37,10 @@ class Main extends Component {
     />
     return (
       <div id="content" className="mt-3" style={{align: 'center', height: '130vh'}}> 
-        <div style={{left: '2vw', top: '2vh', position: 'absolute'}}>{stats}</div> 
-        <div style={{left: '2vw', top: 'calc(110vh - 25vw)', position: 'absolute'}}>{oceanoverview}</div> 
-        {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', top: '2vh', position: 'absolute'}}>{targetstats}</div>}
+        <div style={{left: '2vw', top: '4vh', position: 'absolute'}}>{stats}</div> 
+        {Mobile === 'false' && <div style={{left: '2vw', top: 'calc(110vh - 25vw)', position: 'absolute'}}>{oceanoverview}</div> }
+        {Mobile === 'true' && <div style={{left: '2vw', top: 'calc(110vh)', position: 'absolute'}}>{oceanoverview}</div> }
+        {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', top: '4vh', position: 'absolute'}}>{targetstats}</div>}
         <div className='' style={{fontSize: 20, fontFamily: 'Times New Roman' }}>
           <img src={shipImage} alt="Tree" className="mb-4" style={{ float: 'center', height: '25vw'}}/>
           {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <form className="mb-3" onSubmit={(event) => {
@@ -47,7 +49,7 @@ class Main extends Component {
             target = this.input.value.toString()
             this.props.fire(target)}}>
             <div>
-
+              {Mobile === 'true' && <br></br>}
               <h2 className="float-left"  style = {{color: "black"}} ><b>Enter your target enemy</b></h2>
               <br></br>
               <input

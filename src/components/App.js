@@ -113,6 +113,7 @@ class App extends Component {
     this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 225000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
   })}
+
   adjuststat = (stat, adjust, points) => {
     const health = this.state.stathealth
     const accuracy = this.state.stataccuracy
@@ -127,6 +128,23 @@ class App extends Component {
       if (stat === 1 && health > 0){this.setState({stathealth: health - 1})}
       if (stat === 2 && accuracy > 0){this.setState({stataccuracy: accuracy - 1})}
       if (stat === 3 && damage > 0){this.setState({statdamage: damage - 1})}
+    }
+  }
+  quickclass = (ship) => {
+    if (ship === 1){
+      this.setState({stathealth: 0})
+      this.setState({stataccuracy: 3})
+      this.setState({statdamage: 2})
+    }
+    if (ship === 2){
+      this.setState({stathealth: 1})
+      this.setState({stataccuracy: 1})
+      this.setState({statdamage: 3})
+    }
+    if (ship === 3){
+      this.setState({stathealth: 4})
+      this.setState({stataccuracy: 0})
+      this.setState({statdamage: 1})
     }
   }
 
@@ -210,6 +228,7 @@ class App extends Component {
       content = <Minter
       mint={this.mint}
       adjuststat={this.adjuststat}
+      quickclass={this.quickclass}
       shipContractBalance={this.state.shipContractBalance}
       shipContractSupply={this.state.shipContractSupply}
       stathealth={this.state.stathealth}
@@ -262,7 +281,7 @@ class App extends Component {
                 {content}
               </div>
             </main>
-            <div className="flex mb-5 ml-5"><a className='mr-1' href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
+            <div className="flex mb-5 ml-5"><a className='mr-1' href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
           </div>
         </div>
       </div>} />

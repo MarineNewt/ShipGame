@@ -36,3 +36,8 @@
 .navimage{
     height: calc(2.5vh + 25px);
 }
+
+.nopad{
+    padding: 0;
+    margin: 0;
+}
