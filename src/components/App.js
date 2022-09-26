@@ -10,6 +10,7 @@ import Minter from './Minter';
 import NavBar from './NavBar.js';
 import InfoPage from './GameInfoPage.js';
 import TosPage from './TermsOfService.js';
+import OwnerPage from './Owner.js';
 import './App.css';
 
 class App extends Component {
@@ -287,6 +288,7 @@ class App extends Component {
       </div>} />
           <Route path="/info" element={<Inforoute/>}/>
           <Route path='/terms' element={<Tosroute/>}/>
+          <Route path='/owner' element={<Ownerroute/>}/>
         </Routes>
       </Router>
     );
@@ -298,6 +300,9 @@ function Inforoute() {
 }
 function Tosroute() {
   return <TosPage/>
+}
+function Ownerroute() {
+  return <OwnerPage/>
 }
 
 export default App;
