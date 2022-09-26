@@ -8,7 +8,7 @@ Uses the contract **ShipGame/contracts/ship.sol** deployed to the polygon networ
 **ShipGame/src/components/** holds the jsreact components which allow the game to be played in a more understandable manner with an informative UI to enchance the user experince.
 
 An overview of the minting page shown here:
-<img width="944" alt="shipminter" src="https://user-images.githubusercontent.com/38538941/184683533-828b0546-c03f-413a-aa36-10f0e4741e01.png">
+<img width="942" alt="shipwarsminter" src="https://user-images.githubusercontent.com/38538941/192224133-49a2582a-484d-4c2b-a817-aa6f646912a7.png">
 
 
 Along with an image of the active game page once a user's ship has been minted (and they have fired, choosing a target to attack):
