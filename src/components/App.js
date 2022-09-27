@@ -111,7 +111,7 @@ class App extends Component {
     let statdamage = vthree
     this.setState({statdamage: statdamage.toString()})
     this.setState({loading: true})
-    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 225000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
+    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 350000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
   })}
 
