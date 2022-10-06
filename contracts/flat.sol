@@ -1138,7 +1138,7 @@ pragma solidity ^0.8.0;
 */
 
 contract ShipWars is ERC721, Ownable {
-  string private a; //gas control
+  uint256 private seed = 0; //gas control & random
   using Strings for uint256;
   bool public game = true;
   uint256 public supplyMinted = 0;
@@ -1151,6 +1151,7 @@ contract ShipWars is ERC721, Ownable {
     mapping(address => uint256) TAccuracy;
     mapping(address => uint256) TDamage;
     mapping(address => uint256) TReload;
+    mapping(address => uint256) TType;
     mapping(address => uint256) Account;
     mapping(address => uint256) TProtection;
 
@@ -1164,7 +1165,6 @@ contract ShipWars is ERC721, Ownable {
   {
       require(game);
       require (msg.value >= (1 * 10 **18));
-      require( tx.origin == msg.sender, "CANNOT MINT THROUGH A CUSTOM CONTRACT");
       require( balanceOf(msg.sender) < 1);
       require(hstat + astat + dstat <= 5); //safemath later
       
@@ -1174,6 +1174,7 @@ contract ShipWars is ERC721, Ownable {
         Account[msg.sender] = id;
         onthesea++;
         supplyMinted++;
+        seed = seed%99;
   }
 
     function initship(address player, uint256 heastat, uint256 accstat, uint256 damstat) internal {
@@ -1182,16 +1183,22 @@ contract ShipWars is ERC721, Ownable {
         TDamage[player] = 10 + damstat * 5;
         TReload[player] = 1;
         TProtection[player] = block.number;
+        if(TDamage[player] >= (10 + 15)){TType[player] = 3;}
+        else if(TAccuracy[player] >= (1 + 6)){TType[player] = 2;}
+        else if(THealth[player] >= (50 + 75)){TType[player] = 1;}
+        else {TType[player] = 0;}
     }
 
     function fire (uint256 target) external {
       address aship = msg.sender;
       uint256 atk = findAcc(msg.sender);
-      require(THealth[msg.sender] > 0);
-      require(TReload[msg.sender] <= block.number);
+      require( tx.origin == msg.sender, "CANNOT FIRE THROUGH A CUSTOM CONTRACT");
+      require(THealth[msg.sender] > 0, "Your ship is no longer afloat");
+      require(TReload[msg.sender] <= block.number, "Your canons are still reloading");
       TReload[msg.sender] = block.number + 18;
       address dship = ownerOf(target);
-      require(dship != msg.sender);
+      require(dship != msg.sender, "You cannot fire at yourself");
+      seed = seed + target%20;
 
     if (gasleft() > 65000){
       //brigade protection
@@ -1201,31 +1208,34 @@ contract ShipWars is ERC721, Ownable {
       else{pen = 0;}
       //aim
       uint256 aim = random() - pen;
-      if (aim + TAccuracy[aship] >= 11) {
+      if (aim + TAccuracy[aship] >= 10) {
         if (TDamage[aship] >= THealth[dship]) {
            THealth[dship] = 0;
             _burn(target);
             onthesea--;
             require(payable(msg.sender).send(9 * 10 **17));
             emit Action("Sunk", atk, target);
+            seed = seed + 2;
         } else {
         THealth[dship] = THealth[dship] - TDamage[aship];
+        TProtection[dship] = block.number;
         emit Action("Hit", atk, target);
         }
       } else {
         emit Action("Missed", atk, target);
+        seed = seed + 7;
       }
 
     }
     else{uint i;
-    for(i=0;i<10000;i++){ a = 'waste';
-        a = 'gas';}}
+    for(i=0;i<90000;i++){ seed = 0;
+        seed = 1;}}
   }
 
   //View
-  function random() private view returns (uint) {
+  function random() public view returns (uint) {
       // 0 - 19 value
-    uint randomHash = uint(keccak256(abi.encodePacked(block.difficulty, block.timestamp, msg.sender)));
+    uint randomHash = uint(keccak256(abi.encodePacked(block.number, msg.sender, seed)));
     return randomHash % 20;
   } 
 
@@ -1236,6 +1246,15 @@ contract ShipWars is ERC721, Ownable {
   function findAcc (address player) public view returns (uint) {
     uint256 id = Account[player];
     return id;
+  }
+  function checkall (address player) public view returns (uint256 [5] memory){
+        uint256 [5] memory allstats;
+        allstats[0] = (THealth[player]);
+        allstats[1] = (TAccuracy[player]);
+        allstats[2] = (TDamage[player]);
+        allstats[3] = (TReload[player]);
+        allstats[4] = (TType[player]);
+        return (allstats);
   }
   function checkLife (address player) public view returns (uint) {
       uint life = THealth[player];
@@ -1279,19 +1298,19 @@ contract ShipWars is ERC721, Ownable {
     );
     address target = ownerOf(tokenId);
 
-    if(TDamage[target] >= (10 + 15)){
+    if(TType[target] == 3){
       string memory currentBaseURI = _baseURI();
       return bytes(currentBaseURI).length > 0
           ? string(abi.encodePacked(currentBaseURI, "4", ".json"))
           : "";
     }
-    if(TAccuracy[target] >= (1 + 6)){
+    if(TType[target] == 2){
       string memory currentBaseURI = _baseURI();
       return bytes(currentBaseURI).length > 0
           ? string(abi.encodePacked(currentBaseURI, "2", ".json"))
           : "";
     }
-    if(THealth[target] >= (50 + 75)){
+    if(TType[target] == 1){
       string memory currentBaseURI = _baseURI();
       return bytes(currentBaseURI).length > 0
           ? string(abi.encodePacked(currentBaseURI, "3", ".json"))
@@ -1324,6 +1343,7 @@ contract ShipWars is ERC721, Ownable {
   }
 
   function exit() external onlyOwner{
+    require(onthesea < 1, "All ships must be removed");
     selfdestruct(payable(address(msg.sender)));}
 
     //Handles adjusting accounts for NFT transfers
@@ -1335,6 +1355,7 @@ contract ShipWars is ERC721, Ownable {
             TAccuracy[to] = TAccuracy[from];
             TDamage[to] = TDamage[from];
             TReload[to] = TReload[from];
+            TType[to] = TType[from];
             THealth[from] = 0;
             TAccuracy[from] = 0;
             TDamage[from] = 0;

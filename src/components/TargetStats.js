@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import sinkingship from './images/sinkingship.png'
 
 class TargetStats extends Component {
   render() {
@@ -12,7 +13,7 @@ class TargetStats extends Component {
 
             
             {this.props.enehealthPoints < 1 &&<div style={{textAlign:'center', color:'red'}}><b><h2>Ship {this.props.eneshipNumber}</h2>
-            <h3 className="comp-head-sizer">has been SUNK</h3></b></div>}
+            <h3 className="comp-head-sizer">has been SUNK</h3></b><img src={sinkingship} alt="Tree" className="mb-1" style={{ float: 'center', width: 'calc(20px + 13.5vw)'}}/></div>}
         </div>
         
     );

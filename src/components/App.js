@@ -277,12 +277,12 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
-                <h1>Ship War </h1>
+                <h1>Ship Wars </h1>
                 {this.state.shipOTS === 1 && this.state.healthPoints > 0 && <h2 className="comp-head-sizer" style={{color: '#E3E323'}}>You are the KING of the Seas</h2>}
                 {content}
               </div>
             </main>
-            <div className="flex mb-5 ml-5"><a className='mr-1' href='https://discord.gg/CRbvcdXXMF' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
+            <div className="flex mb-5 ml-5"><a className='mr-1' href='http://discord.gg/Sk8T8VKm4a' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
           </div>
         </div>
       </div>} />
