@@ -43,24 +43,29 @@ class Main extends Component {
         {this.props.eneaccuracyPoints > 0 && <div style={{right: '2vw', top: '4vh', position: 'absolute'}}>{targetstats}</div>}
         <div className='' style={{fontSize: 20, fontFamily: 'Times New Roman' }}>
           <img src={shipImage} alt="Tree" className="mb-4" style={{ float: 'center', height: '25vw'}}/>
-          {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <form className="mb-3" onSubmit={(event) => {
+           <form className="mb-3" onSubmit={(event) => {
             event.preventDefault()
+            let type
+            if(event.nativeEvent.submitter.name === 'scopebtn') {type = 0} else {type = 1}
             let target
             target = this.input.value.toString()
-            this.props.fire(target)}}>
+            this.props.firescope(target, type)}}>
             <div>
               {Mobile === 'true' && <br></br>}
               <h2 className="float-left"  style = {{color: "black"}} ><b>Enter your target enemy</b></h2>
               <br></br>
+              <div className='input-group'>
               <input
                 type="text"
                 ref={(input) =>  { this.input = input }}
                 className="form-control form-control-lg"
                 placeholder="0"
                 required />
+                <button type="submit" name='scopebtn' className="input-group-append inputbtn" style = {{color: "black", backgroundColor: "#33E9FF"}} >Scope</button>
+                </div>
             </div>
-            <button type="submit" className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>
-          </form>} 
+            {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <button type="submit" name='firebtn' className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>}
+          </form>
           {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black', marginBottom: '7vh'}}>
           <p>Your ship is reloading its cannons!</p>
           <p>Prepare for your next shot</p></div>}

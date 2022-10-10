@@ -149,24 +149,26 @@ class App extends Component {
     }
   }
 
-  fire = (target) => {
-    this.setState({loading: true})
-    this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
-    this.setState({ loading: false })
-    this.setState({ internalReload: this.state.blockNumber+17 })
-    var test = this.state.test
-    test = test+1
-    this.setState({ test: test })
+  firescope = (target, type) => {
+    if (type === 1) {
+      this.setState({loading: true})
+      this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
+      this.setState({ loading: false })
+      this.setState({ internalReload: this.state.blockNumber+17 })})}
+    
+    var next = this.state.next
+    next = next+1
+    this.setState({ next: next })
     var thisinterval = setInterval(() => {
-      this.loadTarget(target, test, thisinterval);
+      this.loadTarget(target, next, thisinterval);
     }, 5000); 
-  })}
+  }
 
   async loadTarget(target, int, thisinterval) {
     this.setState({ eneshipNumber: target })
     const last = int
-    var test = this.state.test
-    if (test !== last) {clearInterval(thisinterval)}
+    var next = this.state.next
+    if (next !== last) {clearInterval(thisinterval)}
     const web3 = window.web3
     const networkId = await web3.eth.net.getId() 
     const shipContractData = sC.networks[networkId]
@@ -174,30 +176,40 @@ class App extends Component {
       const shipContract = new web3.eth.Contract(sC.abi, shipContractData.address)
       this.setState({ shipContract })
       if (target !== this.state.lastTarget) {
-        let targetEnemy = await shipContract.methods.ownerOf(target).call()
-        this.setState({ targetEnemy: targetEnemy })
-        this.setState({lastTarget: target})}
-      let targetEnemy = this.state.targetEnemy
-      let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
-      this.setState({ enehealthPoints: enehealthPoints  })
-      let eneaccuracyPoints = await shipContract.methods.checkAccy(targetEnemy).call()
-      this.setState({ eneaccuracyPoints: eneaccuracyPoints  })
-      let enedamagePoints = await shipContract.methods.checkDama(targetEnemy).call()
-      this.setState({ enedamagePoints: enedamagePoints  })}
+        let alivecheck = await shipContract.methods.checkIfTokenExist(target).call()
+        this.setState({ alivecheck: alivecheck })
+        if (alivecheck === '1') {
+          let targetEnemy = await shipContract.methods.ownerOf(target).call()
+          this.setState({ targetEnemy: targetEnemy })}}
+      let alivecheck = this.state.alivecheck
+      if (alivecheck === '1') {
+        let targetEnemy = this.state.targetEnemy
+        let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
+        this.setState({ enehealthPoints: enehealthPoints  })
+        let eneaccuracyPoints = await shipContract.methods.checkAccy(targetEnemy).call()
+        this.setState({ eneaccuracyPoints: eneaccuracyPoints })
+        let enedamagePoints = await shipContract.methods.checkDama(targetEnemy).call()
+        this.setState({ enedamagePoints: enedamagePoints  })}
+      else {
+        this.setState({ enehealthPoints: 0  })
+        this.setState({ eneaccuracyPoints: 1 })
+        this.setState({ enedamagePoints: 0  })
+      }
+      }
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      test: 0,
       OTSarray: [],
       eventlogone: [],
       eventlogtwo: [],
       eventlogthree: [],
       log: 0,
+      next: 0,
       account: '0x0',
       targetEnemy: '0x0',
-      lastTarget: '0',
+      lastTarget: 0,
       shipContract: {},
       shipContractBalance: '0',
       shipContractSupply: '0',
@@ -216,9 +228,11 @@ class App extends Component {
       stathealth: 0,
       stataccuracy: 0,
       statdamage: 0,
+      alivecheck: 0,
       loading: true
     }
   }
+  
 
   render() {
     let content
@@ -244,7 +258,7 @@ class App extends Component {
       else {
       content = <Main
       mint={this.mint}
-      fire={this.fire}
+      firescope={this.firescope}
       adjuststat={this.adjuststat}
       shipContractBalance={this.state.shipContractBalance}
       shipContractSupply={this.state.shipContractSupply}
@@ -282,7 +296,7 @@ class App extends Component {
                 {content}
               </div>
             </main>
-            <div className="flex mb-5 ml-5"><a className='mr-1' href='http://discord.gg/Sk8T8VKm4a' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: '4.5vw'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
+            <div className="flex mb-5 ml-5"><a className='mr-1' href='http://discord.gg/Sk8T8VKm4a' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
           </div>
         </div>
       </div>} />
