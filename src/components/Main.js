@@ -36,7 +36,7 @@ class Main extends Component {
     log={this.props.log}
     />
     return (
-      <div id="content" className="mt-3" style={{align: 'center', height: '130vh'}}> 
+      <div id="content" className="mt-3" style={{align: 'center', height: '140vh'}}> 
         <div style={{left: '2vw', top: '4vh', position: 'absolute'}}>{stats}</div> 
         {Mobile === 'false' && <div style={{left: '2vw', top: 'calc(110vh - 25vw)', position: 'absolute'}}>{oceanoverview}</div> }
         {Mobile === 'true' && <div style={{left: '2vw', top: 'calc(110vh)', position: 'absolute'}}>{oceanoverview}</div> }
