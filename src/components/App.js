@@ -19,7 +19,7 @@ class App extends Component {
     await this.loadBlockchainData()
     setInterval(() => {
       this.loadBlockchainData();
-    }, 6000);
+    }, 4800);
   }
 
   async loadBlockchainData() {
@@ -27,7 +27,6 @@ class App extends Component {
 
     const accounts = await web3.eth.getAccounts()
     this.setState({ account: accounts[0] })
-
     const networkId = await web3.eth.net.getId() 
     let blockNumber = await web3.eth.getBlockNumber()
     this.setState({ blockNumber: blockNumber })
@@ -36,16 +35,10 @@ class App extends Component {
     if(shipContractData) {
       const shipContract = new web3.eth.Contract(sC.abi, shipContractData.address)
       this.setState({ shipContract })
-      let shipContractBalance = await shipContract.methods.balanceOf(this.state.account).call()
-      this.setState({ shipContractBalance: shipContractBalance })
-      let shipContractSupply = await shipContract.methods.supplyMinted().call()
-      this.setState({ shipContractSupply: shipContractSupply })
-      let healthPoints = await shipContract.methods.checkLife(this.state.account).call()
-      this.setState({ healthPoints: healthPoints  })
-      let accuracyPoints = await shipContract.methods.checkAccy(this.state.account).call()
-      this.setState({ accuracyPoints: accuracyPoints  })
-      let damagePoints = await shipContract.methods.checkDama(this.state.account).call()
-      this.setState({ damagePoints: damagePoints  })
+      let allstat = await shipContract.methods.checkall(this.state.account).call()
+      this.setState({ healthPoints: allstat[0]  })
+      this.setState({ accuracyPoints: allstat[1] })
+      this.setState({ damagePoints: allstat[2]  })
 
       let eventfeedone = []
       let eventfeedtwo = []
@@ -69,15 +62,13 @@ class App extends Component {
                                 if(this.state.eventfeedone){let log = this.state.eventfeedone.length; this.setState({ log: log })}
                               })
 
-      if(healthPoints > 0){
+      if(this.state.healthPoints > 0){
         let shipNumber = await shipContract.methods.findAcc(this.state.account).call()
         this.setState({ shipNumber: shipNumber  })
-        let reloadblock = await shipContract.methods.checkRelo(this.state.account).call()
-        this.setState({ reloadblock: reloadblock  })
+        this.setState({ reloadblock: allstat[3]  })
         let OTSarray = await shipContract.methods.idOTS().call()
         this.setState({ OTSarray })      
-        let shipOTS = OTSarray.length;
-        this.setState({ shipOTS: shipOTS  })       
+        this.setState({ shipOTS: OTSarray.length  })       
         }
       }
     else {
@@ -104,31 +95,22 @@ class App extends Component {
 
   mint = (vone, vtwo, vthree) => {
     const web3 = window.web3
-    let stathealth = vone
-    this.setState({stathealth: stathealth.toString()})
-    let stataccuracy = vtwo
-    this.setState({stataccuracy: stataccuracy.toString()})
-    let statdamage = vthree
-    this.setState({statdamage: statdamage.toString()})
     this.setState({loading: true})
-    this.state.shipContract.methods.mint(stathealth,stataccuracy,statdamage).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 350000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
+    this.state.shipContract.methods.mint(vone,vtwo,vthree).send({ from: this.state.account, value: web3.utils.toWei('1'), gas: 350000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000, }).on('transactionHash', (hash) => {
     this.setState({ loading: false })
   })}
 
   adjuststat = (stat, adjust, points) => {
-    const health = this.state.stathealth
-    const accuracy = this.state.stataccuracy
-    const damage = this.state.statdamage
     if (adjust === 1){
       if (points === 0){return}
-      if (stat === 1){this.setState({stathealth: health + 1})}
-      if (stat === 2){this.setState({stataccuracy: accuracy + 1})}
-      if (stat === 3){this.setState({statdamage: damage + 1})}
+      if (stat === 1){this.setState({stathealth: this.state.stathealth + 1})}
+      if (stat === 2){this.setState({stataccuracy: this.state.stataccuracy + 1})}
+      if (stat === 3){this.setState({statdamage: this.state.statdamage + 1})}
       }
     if (adjust === 0){
-      if (stat === 1 && health > 0){this.setState({stathealth: health - 1})}
-      if (stat === 2 && accuracy > 0){this.setState({stataccuracy: accuracy - 1})}
-      if (stat === 3 && damage > 0){this.setState({statdamage: damage - 1})}
+      if (stat === 1 && this.state.stathealth > 0){this.setState({stathealth: this.state.stathealth - 1})}
+      if (stat === 2 && this.state.stataccuracy > 0){this.setState({stataccuracy: this.state.stataccuracy - 1})}
+      if (stat === 3 && this.state.statdamage > 0){this.setState({statdamage: this.state.statdamage - 1})}
     }
   }
   quickclass = (ship) => {
@@ -152,7 +134,7 @@ class App extends Component {
   firescope = (target, type) => {
     if (type === 1) {
       this.setState({loading: true})
-      this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 100000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
+      this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 125000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
       this.setState({ loading: false })
       this.setState({ internalReload: this.state.blockNumber+17 })})}
     
@@ -161,7 +143,7 @@ class App extends Component {
     this.setState({ next: next })
     var thisinterval = setInterval(() => {
       this.loadTarget(target, next, thisinterval);
-    }, 5000); 
+    }, 4500); 
   }
 
   async loadTarget(target, int, thisinterval) {
@@ -183,13 +165,11 @@ class App extends Component {
           this.setState({ targetEnemy: targetEnemy })}}
       let alivecheck = this.state.alivecheck
       if (alivecheck === '1') {
-        let targetEnemy = this.state.targetEnemy
-        let enehealthPoints = await shipContract.methods.checkLife(targetEnemy).call()
-        this.setState({ enehealthPoints: enehealthPoints  })
-        let eneaccuracyPoints = await shipContract.methods.checkAccy(targetEnemy).call()
-        this.setState({ eneaccuracyPoints: eneaccuracyPoints })
-        let enedamagePoints = await shipContract.methods.checkDama(targetEnemy).call()
-        this.setState({ enedamagePoints: enedamagePoints  })}
+        let allstat = await shipContract.methods.checkall(this.state.targetEnemy).call()
+        this.setState({ enehealthPoints: allstat[0]  })
+        this.setState({ eneaccuracyPoints: allstat[1] })
+        this.setState({ enedamagePoints: allstat[2]  })
+      }
       else {
         this.setState({ enehealthPoints: 0  })
         this.setState({ eneaccuracyPoints: 1 })
@@ -211,8 +191,6 @@ class App extends Component {
       targetEnemy: '0x0',
       lastTarget: 0,
       shipContract: {},
-      shipContractBalance: '0',
-      shipContractSupply: '0',
       shipNumber: '0',
       healthPoints: '0',
       accuracyPoints: '0',
@@ -244,8 +222,6 @@ class App extends Component {
       mint={this.mint}
       adjuststat={this.adjuststat}
       quickclass={this.quickclass}
-      shipContractBalance={this.state.shipContractBalance}
-      shipContractSupply={this.state.shipContractSupply}
       stathealth={this.state.stathealth}
       stataccuracy={this.state.stataccuracy}
       statdamage={this.state.statdamage}
@@ -260,8 +236,6 @@ class App extends Component {
       mint={this.mint}
       firescope={this.firescope}
       adjuststat={this.adjuststat}
-      shipContractBalance={this.state.shipContractBalance}
-      shipContractSupply={this.state.shipContractSupply}
       blockNumber={this.state.blockNumber}
       shipNumber={this.state.shipNumber}
       healthPoints={this.state.healthPoints}
@@ -291,12 +265,12 @@ class App extends Component {
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
               <div className="content mr-auto ml-auto">
-                <h1>Ship Wars </h1>
+                <h1>Ship Wars</h1>
                 {this.state.shipOTS === 1 && this.state.healthPoints > 0 && <h2 className="comp-head-sizer" style={{color: '#E3E323'}}>You are the KING of the Seas</h2>}
                 {content}
               </div>
             </main>
-            <div className="flex mb-5 ml-5"><a className='mr-1' href='http://discord.gg/Sk8T8VKm4a' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a></div>
+            <div className="flex mb-5 ml-5"><a className='mr-1' href='http://discord.gg/Sk8T8VKm4a' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={discord} alt="info"></img></a><a href='https://twitter.com/NFTgameworks' target="_blank" rel="noopener noreferrer"><img style={{borderRadius: '20%', height: 'calc(13px + 3.5vw)'}} src={twitter} alt="info"></img></a><a href="/terms" className="ml-3" style={{verticalAlign: 'bottom'}}>Terms of Service</a><br></br><br></br><p>Contract: <a href={`https://polygonscan.com/address/${sC.networks[137].address}`} target="_blank" rel="noopener noreferrer" className="ml-0" style={{verticalAlign: 'bottom', alignContent: 'right'}}>{sC.networks[137].address}</a></p></div>
           </div>
         </div>
       </div>} />

@@ -79,10 +79,10 @@ contract ShipWars is ERC721, Ownable {
     function fire (uint256 target) external {
       address aship = msg.sender;
       uint256 atk = findAcc(msg.sender);
-      require( tx.origin == msg.sender, "CANNOT FIRE THROUGH A CUSTOM CONTRACT");
+      require(tx.origin == msg.sender, "CANNOT FIRE THROUGH A CUSTOM CONTRACT");
       require(THealth[msg.sender] > 0, "Your ship is no longer afloat");
       require(TReload[msg.sender] <= block.number, "Your canons are still reloading");
-      TReload[msg.sender] = block.number + 18;
+      TReload[msg.sender] = block.number + 16;
       address dship = ownerOf(target);
       require(dship != msg.sender, "You cannot fire at yourself");
       seed = seed + target%20;
@@ -90,8 +90,8 @@ contract ShipWars is ERC721, Ownable {
     if (gasleft() > 65000){
       //brigade protection
       uint256 pen;
-      if(block.number - TProtection[dship] <= 12){pen = 2;}
-      if(block.number - TProtection[dship] <= 6){pen = 4;}
+      if(block.number - TProtection[dship] <= 11){pen = 2;
+        if(block.number - TProtection[dship] <= 5){pen = 4;}}
       else{pen = 0;}
       //aim
       uint256 aim = random() - pen;

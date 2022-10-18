@@ -64,7 +64,7 @@ class Main extends Component {
                 <button type="submit" name='scopebtn' className="input-group-append inputbtn" style = {{color: "black", backgroundColor: "#33E9FF"}} >Scope</button>
                 </div>
             </div>
-            {this.props.reloadblock <= this.props.blockNumber && this.props.internalReload <= this.props.blockNumber && <button type="submit" name='firebtn' className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>}
+            {this.props.internalReload <= this.props.blockNumber && this.props.reloadblock <= this.props.blockNumber && <button type="submit" name='firebtn' className="btn btn-primary btn-block btn-lg" style = {{color: "black", backgroundColor: "red"}} >FIRE</button>}
           </form>
           {(this.props.reloadblock > this.props.blockNumber || this.props.internalReload > this.props.blockNumber) && <div style={{color: 'black', textAlign: 'center', border: '5px solid black', marginBottom: '7vh'}}>
           <p>Your ship is reloading its cannons!</p>
