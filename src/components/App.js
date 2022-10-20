@@ -134,7 +134,7 @@ class App extends Component {
   firescope = (target, type) => {
     if (type === 1) {
       this.setState({loading: true})
-      this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 125000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
+      this.state.shipContract.methods.fire(target).send({ from: this.state.account, gas: 150000, maxFeePerGas: 200000000000, maxPriorityFeePerGas: 36100000000,}).on('transactionHash', (hash) => {
       this.setState({ loading: false })
       this.setState({ internalReload: this.state.blockNumber+17 })})}
     
