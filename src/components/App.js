@@ -72,7 +72,8 @@ class App extends Component {
         }
       }
     else {
-      window.alert('Please switch to the Polygon Network ')
+      if(!this.state.notified){window.alert('Please switch to the Polygon Network ')}
+      this.setState({notified: true})
       }
 
     this.setState({ loading: false })
@@ -90,7 +91,6 @@ class App extends Component {
       window.alert('Non-ethereum browser detected. Metamask install is recommended.')
     }
   }
-
   
 
   mint = (vone, vtwo, vthree) => {
@@ -207,7 +207,8 @@ class App extends Component {
       stataccuracy: 0,
       statdamage: 0,
       alivecheck: 0,
-      loading: true
+      notified: false,
+      loading: false
     }
   }
   
@@ -222,6 +223,8 @@ class App extends Component {
       mint={this.mint}
       adjuststat={this.adjuststat}
       quickclass={this.quickclass}
+      connectwallet={this.connectwallet}
+      account={this.state.account}
       stathealth={this.state.stathealth}
       stataccuracy={this.state.stataccuracy}
       statdamage={this.state.statdamage}

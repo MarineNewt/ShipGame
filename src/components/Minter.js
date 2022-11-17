@@ -37,8 +37,10 @@ class Minter extends Component {
                 <form className="mb-0" onSubmit={(event) => {
                     event.preventDefault()
                     this.props.mint(this.props.stathealth, this.props.stataccuracy, this.props.statdamage)}}>
-                   <button type="submit" className="btn btn-primary btn-block btn-lg mb-3" style = {{color: "white", backgroundColor: "black"}} >Mint a Ship for 1 Matic</button>
-                </form>     
+                   {this.props.account !== '0x0' && <button type="submit" className="btn btn-primary btn-block btn-lg mb-3" style = {{color: "white", backgroundColor: "black"}} >Mint a Ship for 1 Matic</button>}
+                   
+                </form>    
+                {this.props.account === '0x0' && <a href='/'><button className="btn btn-primary btn-block btn-lg mb-3" style = {{color: "white", backgroundColor: "black"}} >Connect Wallet</button></a>} 
 
                 <br></br>
                 <div className='' style={{fontSize: 20, fontFamily: 'Times New Roman' }} >
